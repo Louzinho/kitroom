@@ -1,0 +1,7 @@
+Flask>=3.0,<4
+PyMySQL>=1.1,<2
+cryptography>=42
+pymongo>=4.7,<5
+python-dotenv>=1.0,<2
+Pillow>=10
+pytest>=8
