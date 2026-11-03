@@ -1,0 +1,25 @@
+sequenceDiagram
+  participant B as Browser
+  participant F as Flask
+  participant S as MySQL
+  participant M as MongoDB
+  B->>F: POST /api/checkout
+  F->>M: read cart and version
+  F->>S: BEGIN
+  F->>S: SELECT ... FOR UPDATE (ascending product_id)
+  alt stock too low, or any error
+    F->>S: ROLLBACK
+    F-->>B: 409 with the shirts that fell short
+  else all steps succeed
+    F->>S: UPDATE products (deduct stock)
+    F->>S: INSERT orders, order_items, sync_outbox
+    F->>S: COMMIT
+    F->>M: start transaction: clear cart, log, notify
+    alt MongoDB commits
+      F->>S: mark outbox event done
+    else MongoDB fails
+      M--xF: abort, nothing written
+      F->>S: event stays pending for replay
+    end
+    F-->>B: 201 order created
+  end

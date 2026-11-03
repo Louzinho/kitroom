@@ -1,0 +1,55 @@
+classDiagram
+  direction LR
+  class shopping_carts {
+    ObjectId _id
+    int userId "unique, refers to SQL users"
+    int version "bumped on every change"
+    CartItem[] items "embedded"
+    Date updatedAt
+  }
+  class CartItem {
+    int productId "refers to SQL products"
+    int quantity "min 1"
+    double price "display copy"
+    string title
+    Date addedAt
+  }
+  class product_reviews {
+    ObjectId _id
+    int productId "unique with userId"
+    int userId
+    string userName "extended reference"
+    string productTitle "extended reference"
+    int rating "1 to 5"
+    string comment
+    int likes
+    int[] likedBy
+    bool verifiedPurchase
+    string sizeFeedback "optional"
+    string photo "optional local path"
+    Date createdAt
+    Date editedAt "optional"
+  }
+  class user_notifications {
+    ObjectId _id
+    int userId
+    string title
+    string message
+    string kind "info, order, broadcast"
+    bool isRead
+    Date sentAt
+    int orderId "optional"
+    string eventKey "optional, unique"
+  }
+  class user_activity_logs {
+    ObjectId _id
+    int userId "null for guests"
+    string action_type
+    string ip_address
+    object metadata "shape varies by action"
+    string adminNote "optional"
+    string source "optional"
+    string eventKey "optional, unique"
+    Date timestamp "TTL 180 days"
+  }
+  shopping_carts *-- CartItem : embeds

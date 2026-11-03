@@ -1,0 +1,21 @@
+flowchart LR
+  subgraph B["Web browser"]
+    UI["Single-page frontend<br/>HTML, CSS, JavaScript modules<br/>served locally, no CDN"]
+  end
+  subgraph S["Application server (Flask, local machine)"]
+    R["Routes<br/>app/routes.py"] --> C["Controllers<br/>validation, auth, roles"]
+    C --> SV["Services<br/>orders.py, sync.py"]
+    C --> M["Models<br/>parameterised SQL and PyMongo"]
+    SV --> M
+    F["Local file storage<br/>app/static/uploads"]
+    C --> F
+  end
+  subgraph D["Self-hosted databases"]
+    SQL[("MySQL 8<br/>users, categories, products,<br/>orders, order_items, sync_outbox")]
+    NO[("MongoDB replica set<br/>shopping_carts, product_reviews,<br/>user_notifications, user_activity_logs")]
+  end
+  UI -- "REST / JSON over HTTP" --> R
+  UI -- "images" --> F
+  M -- "PyMySQL<br/>ACID transactions" --> SQL
+  M -- "PyMongo<br/>multi-document transactions" --> NO
+  SV -. "outbox event replayed<br/>until MongoDB confirms" .-> NO

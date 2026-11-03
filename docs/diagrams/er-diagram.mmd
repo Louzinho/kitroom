@@ -1,0 +1,60 @@
+erDiagram
+  USERS ||--o{ ORDERS : places
+  CATEGORIES ||--o{ PRODUCTS : groups
+  ORDERS ||--|{ ORDER_ITEMS : contains
+  PRODUCTS ||--o{ ORDER_ITEMS : "sold as"
+  ORDERS ||--o{ SYNC_OUTBOX : emits
+  USERS {
+    int user_id PK
+    varchar email UK
+    varchar password_hash
+    varchar full_name
+    enum role "customer, admin"
+    varchar avatar_path "local path"
+    timestamp created_at
+  }
+  CATEGORIES {
+    int category_id PK
+    varchar name UK
+    varchar description
+  }
+  PRODUCTS {
+    int product_id PK
+    int category_id FK
+    varchar title
+    varchar club
+    varchar season
+    text description
+    decimal price "CHECK > 0"
+    int stock_quantity "CHECK >= 0"
+    enum status "active, archived"
+    varchar image_path "local path"
+    timestamp created_at
+  }
+  ORDERS {
+    int order_id PK
+    int user_id FK
+    decimal total_amount "CHECK >= 0"
+    enum order_status "pending, shipped, delivered, cancelled"
+    varchar shipping_address
+    timestamp created_at
+    timestamp updated_at
+  }
+  ORDER_ITEMS {
+    int item_id PK
+    int order_id FK "UQ with product_id, cascade"
+    int product_id FK "restrict"
+    decimal unit_price "price at purchase"
+    int quantity "CHECK > 0"
+  }
+  SYNC_OUTBOX {
+    int outbox_id PK
+    int order_id FK "cascade"
+    enum event_type
+    json payload
+    enum status "pending, done"
+    int attempts
+    varchar last_error
+    timestamp created_at
+    timestamp processed_at
+  }
