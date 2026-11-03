@@ -294,4 +294,4 @@ POST /api/checkout
 
 ## Credits
 
-Barlow and Bowlby One fonts are under the SIL Open Font License. Shirt illustrations are drawn by `scripts/make_kit_images.py` and contain no club crests. Clubs and shirts in the seed data are fictional stock for a student project, not a real shop.
+Barlow and Bowlby One fonts are under the SIL Open Font License. Shirt illustrations are drawn by `scripts/make_kit_images.py` and contain no club crests. The seed data is demo content for a student project, not a real shop.
