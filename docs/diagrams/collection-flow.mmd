@@ -1,0 +1,13 @@
+flowchart TB
+  A["Customer browses and adds shirts"] -->|"$push / $inc, version + 1"| C[(shopping_carts)]
+  C -->|"cart read at checkout"| T["MySQL transaction<br/>verify, deduct, order, items, outbox"]
+  T -->|"failure"| RB["ROLLBACK<br/>cart untouched"]
+  T -->|"COMMIT"| TX["MongoDB transaction"]
+  TX -->|"delete cart if version matches"| C
+  TX -->|"upsert by eventKey"| L[(user_activity_logs)]
+  TX -->|"upsert by eventKey"| N[(user_notifications)]
+  TX -->|"failure: abort, event stays pending, replay later"| TX
+  R["Buyer writes a review"] -->|"verifiedPurchase looked up in SQL"| P[(product_reviews)]
+  P -->|"$group average rating"| V["Catalogue and product pages"]
+  N --> B["Alerts panel"]
+  L --> S["Staff activity view"]
