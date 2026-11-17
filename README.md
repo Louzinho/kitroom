@@ -114,6 +114,12 @@ tests/             integration tests
 
 Why each store: a stock count that drifts costs real money, so stock lives under ACID constraints. A cart is read and written as one unit and has a varying number of lines, so it is one document with embedded items. Reviews and log entries have optional fields that differ per document, which suits a flexible schema.
 
+### UML class diagram
+
+The whole domain in one model. Green classes are MySQL tables, blue classes are MongoDB collections. Solid lines are foreign keys enforced by MySQL; dashed lines are ids stored in documents and checked by the application. A black diamond is composition: the part is deleted with its whole.
+
+![UML class diagram](docs/diagrams/uml-class.png)
+
 ### SQL: 6 tables, third normal form
 
 ![ER diagram](docs/diagrams/er-diagram.png)

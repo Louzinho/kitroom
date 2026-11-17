@@ -1,0 +1,91 @@
+classDiagram
+  direction LR
+  class User {
+    <<MySQL table>>
+    +user_id : int
+    +email : string
+    +full_name : string
+    +role : customer | admin
+  }
+  class Category {
+    <<MySQL table>>
+    +category_id : int
+    +name : string
+  }
+  class Product {
+    <<MySQL table>>
+    +product_id : int
+    +title : string
+    +season : string
+    +price : decimal
+    +stock_quantity : int
+  }
+  class Order {
+    <<MySQL table>>
+    +order_id : int
+    +total_amount : decimal
+    +order_status : string
+    +shipping_address : string
+  }
+  class OrderItem {
+    <<MySQL table>>
+    +unit_price : decimal
+    +quantity : int
+  }
+  class SyncOutbox {
+    <<MySQL table>>
+    +event_type : string
+    +status : pending | done
+  }
+  class ShoppingCart {
+    <<MongoDB collection>>
+    +userId : int
+    +version : int
+  }
+  class CartItem {
+    <<embedded document>>
+    +productId : int
+    +quantity : int
+  }
+  class ProductReview {
+    <<MongoDB collection>>
+    +productId : int
+    +userId : int
+    +rating : 1..5
+    +comment : string
+  }
+  class Notification {
+    <<MongoDB collection>>
+    +userId : int
+    +title : string
+    +isRead : bool
+  }
+  class ActivityLog {
+    <<MongoDB collection>>
+    +userId : int
+    +action_type : string
+    +timestamp : date
+  }
+  User "1" --> "0..*" Order : places
+  Category "1" --> "0..*" Product : groups
+  Order "1" *-- "1..*" OrderItem : contains
+  Product "1" --> "0..*" OrderItem : sold as
+  Order "1" --> "0..*" SyncOutbox : emits
+  User "1" ..> "0..1" ShoppingCart : owns
+  ShoppingCart "1" *-- "0..*" CartItem : embeds
+  CartItem ..> Product : productId
+  User "1" ..> "0..*" ProductReview : writes
+  ProductReview ..> Product : productId
+  User "1" ..> "0..*" Notification : receives
+  User "1" ..> "0..*" ActivityLog : generates
+  style User fill:#dcefe3,stroke:#0e4b34,stroke-width:2px
+  style Category fill:#dcefe3,stroke:#0e4b34,stroke-width:2px
+  style Product fill:#dcefe3,stroke:#0e4b34,stroke-width:2px
+  style Order fill:#dcefe3,stroke:#0e4b34,stroke-width:2px
+  style OrderItem fill:#dcefe3,stroke:#0e4b34,stroke-width:2px
+  style SyncOutbox fill:#dcefe3,stroke:#0e4b34,stroke-width:2px
+  style ShoppingCart fill:#dcecf8,stroke:#1f5f8b,stroke-width:2px
+  style CartItem fill:#dcecf8,stroke:#1f5f8b,stroke-width:2px
+  style ProductReview fill:#dcecf8,stroke:#1f5f8b,stroke-width:2px
+  style Notification fill:#dcecf8,stroke:#1f5f8b,stroke-width:2px
+  style ActivityLog fill:#dcecf8,stroke:#1f5f8b,stroke-width:2px
