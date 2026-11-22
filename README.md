@@ -2,6 +2,8 @@
 
 **Video presentation:** https://youtu.be/mCZG_0_tjnM
 
+**Slides:** [KitRoom-presentation.pptx](docs/presentation/KitRoom-presentation.pptx)
+
 A full-stack shop for retro football shirts, built for the Hybrid Database Web Application project of Database Systems (01219231) at Kasetsart University.
 
 MySQL holds what must stay strictly correct: accounts, catalogue, stock and orders. MongoDB holds what changes shape or volume quickly: carts, reviews, notifications and activity logs. Checkout spans both engines without ever losing an order or leaving a half-finished one.
